@@ -10,6 +10,7 @@ export class JobService {
         @Inject('JOB_RESPONSITORY')
         private jobRepository: Repository<Job>,
     ) {}
+
     async create(job: CreateJobDto): Promise<any> {
         try {
             await this.jobRepository.insert(job)
@@ -43,15 +44,54 @@ export class JobService {
         }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} job`
+    async findOne(id: number) {
+        try {
+            let job = await this.jobRepository.findOneByOrFail({ id })
+            return {
+                EC: 0,
+                EM: 'Get job successfully',
+                DT: job,
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'somthing wring in service',
+            }
+        }
     }
 
-    update(id: number, updateJobDto: UpdateJobDto) {
-        return `This action updates a #${id} job`
+    async update(id: number, job: UpdateJobDto) {
+        try {
+            await this.jobRepository.findOneByOrFail({ id })
+            await this.jobRepository.save({ id, ...job })
+            return {
+                EC: 0,
+                EM: 'Update job successfully',
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'somthing wring in service',
+            }
+        }
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} job`
+    async remove(id: number) {
+        try {
+            await this.jobRepository.findOneByOrFail({ id })
+            await this.jobRepository.delete({ id })
+            return {
+                EC: 0,
+                EM: 'Delete job successfully',
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'somthing wring in service',
+            }
+        }
     }
 }

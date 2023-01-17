@@ -31,12 +31,7 @@ export class JobController {
     @Get()
     async findAll() {
         try {
-            let data = await this.jobService.findAll()
-            return {
-                EC: data.EC,
-                EM: data.EM,
-                DT: data.DT,
-            }
+            return await this.jobService.findAll()
         } catch (error) {
             console.log(error)
             return {
@@ -47,17 +42,41 @@ export class JobController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.jobService.findOne(+id)
+    async findOne(@Param('id') id: string) {
+        try {
+            return await this.jobService.findOne(+id)
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'Error from server',
+            }
+        }
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-        return this.jobService.update(+id, updateJobDto)
+    @Patch('update/:id')
+    async update(@Param('id') id: string, @Body() job: UpdateJobDto) {
+        try {
+            return await this.jobService.update(+id, job)
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'Error from server',
+            }
+        }
     }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.jobService.remove(+id)
+    @Delete('delete/:id')
+    async remove(@Param('id') id: string) {
+        try {
+            return await this.jobService.remove(+id)
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'Error from server',
+            }
+        }
     }
 }
