@@ -1,14 +1,13 @@
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { Injectable, Inject } from '@nestjs/common'
 import { CreateJobDto } from './dto/create-job.dto'
 import { UpdateJobDto } from './dto/update-job.dto'
-import { Job } from './entities/job.entity'
+import { Job } from './job.entity'
 import { Repository } from 'typeorm'
 
 @Injectable()
 export class JobService {
     constructor(
-        @InjectRepository(Job)
+        @Inject('JOB_RESPONSITORY')
         private jobRepository: Repository<Job>,
     ) {}
     async create(job: CreateJobDto): Promise<any> {
@@ -27,8 +26,21 @@ export class JobService {
         }
     }
 
-    findAll() {
-        return `This action returns all job`
+    async findAll() {
+        try {
+            let allJobs = await this.jobRepository.find()
+            return {
+                EC: 0,
+                EM: 'Get all jobs successfully',
+                DT: allJobs,
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'somthing wring in service',
+            }
+        }
     }
 
     findOne(id: number) {

@@ -29,8 +29,21 @@ export class JobController {
     }
 
     @Get()
-    findAll() {
-        return this.jobService.findAll()
+    async findAll() {
+        try {
+            let data = await this.jobService.findAll()
+            return {
+                EC: data.EC,
+                EM: data.EM,
+                DT: data.DT,
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                EC: 1,
+                EM: 'Error from server',
+            }
+        }
     }
 
     @Get(':id')
