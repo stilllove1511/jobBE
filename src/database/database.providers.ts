@@ -11,7 +11,7 @@ export const databaseProviders = [
                 username: 'root',
                 password: '1',
                 database: 'job',
-                entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+                entities: [__dirname + '/../**/*.entity.{ts,js}'],
                 synchronize: true,
             })
 

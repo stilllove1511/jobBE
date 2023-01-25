@@ -22,8 +22,8 @@ export class JobController {
         } catch (error) {
             console.log(error)
             return {
-                EC: 1,
-                EM: 'Error from server',
+                EC: 1, //error code
+                EM: 'Error from server', //error message
             }
         }
     }
@@ -35,8 +35,8 @@ export class JobController {
         } catch (error) {
             console.log(error)
             return {
-                EC: 1,
-                EM: 'Error from server',
+                EC: 1, //error code
+                EM: 'Error from server', //error message
             }
         }
     }
@@ -48,21 +48,22 @@ export class JobController {
         } catch (error) {
             console.log(error)
             return {
-                EC: 1,
-                EM: 'Error from server',
+                EC: 1, //error code
+                EM: 'Error from server', //error message
             }
         }
     }
 
     @Patch('update/:id')
-    async update(@Param('id') id: string, @Body() job: UpdateJobDto) {
+    async update(@Param('id') id: string, @Body() job: any) {
         try {
-            return await this.jobService.update(+id, job)
+            job.id = +id
+            return await this.jobService.update(job)
         } catch (error) {
             console.log(error)
             return {
-                EC: 1,
-                EM: 'Error from server',
+                EC: 1, //error code
+                EM: 'Error from server', //error message
             }
         }
     }
@@ -74,8 +75,8 @@ export class JobController {
         } catch (error) {
             console.log(error)
             return {
-                EC: 1,
-                EM: 'Error from server',
+                EC: 1, //error code
+                EM: 'Error from server', //error message
             }
         }
     }
