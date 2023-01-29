@@ -6,7 +6,7 @@ import { ApplicationModule } from './application/application.module'
 import { SearchJobModule } from './search-job/search-job.module'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
-import { AccountModule } from './account/account.module';
+import { AccountModule } from './account/account.module'
 
 @Module({
     imports: [
