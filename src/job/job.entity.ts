@@ -4,7 +4,7 @@ import {
     Column,
     PrimaryGeneratedColumn,
     JoinColumn,
-    OneToOne,
+    ManyToOne,
 } from 'typeorm'
 
 @Entity('job')
@@ -18,7 +18,6 @@ export class Job {
     @Column()
     description: string
 
-    @OneToOne(() => User)
-    @JoinColumn()
+    @ManyToOne(() => User, (user) => user.jobs)
     user: User
 }

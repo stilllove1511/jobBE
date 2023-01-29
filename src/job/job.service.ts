@@ -27,9 +27,24 @@ export class JobService {
         }
     }
 
-    async findAll() {
+    async findAll(userId) {
         try {
-            let allJobs = await this.jobRepository.find()
+            let allJobs = await this.jobRepository.find({
+                where: {
+                    user: {
+                        id: userId,
+                    },
+                },
+                relations: {
+                    user: true,
+                },
+                select: {
+                    user: {
+                        id: true,
+                        username: true,
+                    },
+                },
+            })
             return {
                 EC: 0, //error code
                 EM: 'Get all jobs successfully', //error message
@@ -46,7 +61,18 @@ export class JobService {
 
     async findOne(id: number) {
         try {
-            let job = await this.jobRepository.findOneByOrFail({ id })
+            let job = await this.jobRepository.findOneOrFail({
+                where: { id },
+                relations: {
+                    user: true,
+                },
+                select: {
+                    user: {
+                        id: true,
+                        username: true,
+                    },
+                },
+            })
             return {
                 EC: 0, //error code
                 EM: 'Get job successfully', //error message
@@ -61,10 +87,15 @@ export class JobService {
         }
     }
 
-    async update(job: any) {
+    async update(payload) {
         try {
-            await this.jobRepository.findOneByOrFail(job.id)
-            await this.jobRepository.save(job)
+            await this.jobRepository.findOneByOrFail({
+                id: payload.jobId,
+                user: {
+                    id: payload.userId,
+                },
+            })
+            await this.jobRepository.save(payload.job)
             return {
                 EC: 0, //error code
                 EM: 'Update job successfully', //error message
@@ -78,10 +109,15 @@ export class JobService {
         }
     }
 
-    async remove(id: number) {
+    async remove(payload) {
         try {
-            await this.jobRepository.findOneByOrFail({ id })
-            await this.jobRepository.delete({ id })
+            await this.jobRepository.findOneByOrFail({
+                id: payload.jobId,
+                user: {
+                    id: payload.userId,
+                },
+            })
+            await this.jobRepository.delete({ id: payload.id })
             return {
                 EC: 0, //error code
                 EM: 'Delete job successfully', //error message
