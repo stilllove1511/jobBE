@@ -1,5 +1,24 @@
+import { Company } from 'src/company/company.entity'
 import { Job } from 'src/job/job.entity'
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    OneToMany,
+    ManyToOne,
+} from 'typeorm'
+
+@Entity('userType')
+export class UserType {
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    type: string
+
+    @OneToMany(() => User, (user) => user.type)
+    users: User[]
+}
 
 @Entity('user')
 export class User {
@@ -12,6 +31,9 @@ export class User {
     @Column()
     password: string
 
-    @OneToMany(() => Job, (job) => job.user)
-    jobs: Job[]
+    @ManyToOne(() => UserType, (type) => type.users)
+    type: UserType
+
+    @ManyToOne(() => Company, (company) => company.users)
+    company: Company
 }

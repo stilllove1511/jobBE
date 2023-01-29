@@ -1,5 +1,13 @@
+import { Company } from 'src/company/company.entity'
 import { User } from 'src/user/user.entity'
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    ManyToMany,
+    JoinTable,
+} from 'typeorm'
 
 @Entity('job')
 export class Job {
@@ -24,6 +32,9 @@ export class Job {
     @Column({ nullable: true })
     description: string
 
-    @ManyToOne(() => User, (user) => user.jobs)
-    user: User
+    @ManyToOne(() => Company, (company) => company.jobs)
+    company: Company
+
+    @Column()
+    skills: string
 }

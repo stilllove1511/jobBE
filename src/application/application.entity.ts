@@ -12,7 +12,7 @@ export class Application {
     job_id: number
 
     @Column()
-    letter_of_introduction: string
+    advantages: string
 
     @Column()
     CV_URL: string

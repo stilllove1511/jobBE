@@ -3,17 +3,37 @@ import { CreateJobDto } from './dto/create-job.dto'
 import { UpdateJobDto } from './dto/update-job.dto'
 import { Job } from './job.entity'
 import { Repository } from 'typeorm'
+import {
+    JOB_RESPONSITORY,
+    USER_RESPONSITORY,
+} from 'src/common/constant/database-provider.constant'
+import { User } from 'src/user/user.entity'
 
 @Injectable()
 export class JobService {
     constructor(
-        @Inject('JOB_RESPONSITORY')
+        @Inject(JOB_RESPONSITORY)
         private jobRepository: Repository<Job>,
+        @Inject(USER_RESPONSITORY)
+        private userRepository: Repository<User>,
     ) {}
 
-    async create(job: CreateJobDto): Promise<any> {
+    async create(payload): Promise<any> {
         try {
-            await this.jobRepository.insert(job)
+            let userWithCompany = await this.userRepository.findOneOrFail({
+                where: { id: payload.user.userId },
+                relations: {
+                    company: true,
+                },
+            })
+            let userCompany = userWithCompany.company //get user company
+
+            console.log(userCompany)
+
+            await this.jobRepository.insert({
+                ...payload.job,
+                company: userCompany,
+            })
             return {
                 EC: 0, //error code
                 EM: 'create job successfully', //error message
@@ -27,37 +47,37 @@ export class JobService {
         }
     }
 
-    async findAll(userId) {
-        try {
-            let allJobs = await this.jobRepository.find({
-                where: {
-                    user: {
-                        id: userId,
-                    },
-                },
-                // relations: {
-                //     user: true,
-                // },
-                // select: {
-                //     user: {
-                //         id: true,
-                //         username: true,
-                //     },
-                // },
-            })
-            return {
-                EC: 0, //error code
-                EM: 'Get all jobs successfully', //error message
-                DT: allJobs, //data
-            }
-        } catch (error) {
-            console.log(error)
-            return {
-                EC: 1, //error code
-                EM: 'somthing wring in service', //error message
-            }
-        }
-    }
+    // async findAll(userId) {
+    //     try {
+    //         let allJobs = await this.jobRepository.find({
+    //             where: {
+    //                 user: {
+    //                     id: userId,
+    //                 },
+    //             },
+    //             // relations: {
+    //             //     user: true,
+    //             // },
+    //             // select: {
+    //             //     user: {
+    //             //         id: true,
+    //             //         username: true,
+    //             //     },
+    //             // },
+    //         })
+    //         return {
+    //             EC: 0, //error code
+    //             EM: 'Get all jobs successfully', //error message
+    //             DT: allJobs, //data
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //         return {
+    //             EC: 1, //error code
+    //             EM: 'somthing wring in service', //error message
+    //         }
+    //     }
+    // }
 
     async findOne(id: number) {
         try {
@@ -89,13 +109,23 @@ export class JobService {
 
     async update(payload) {
         try {
-            await this.jobRepository.findOneByOrFail({
-                id: payload.jobId,
-                user: {
-                    id: payload.userId,
+            let userWithCompany = await this.userRepository.findOneOrFail({
+                where: { id: payload.user.userId },
+                relations: {
+                    company: true,
                 },
             })
-            await this.jobRepository.save(payload.job)
+            let userCompany = userWithCompany.company //get user company
+
+            //check if user company and company of job is the same
+            await this.jobRepository.findOneByOrFail({
+                id: payload.jobId,
+                company: {
+                    id: userCompany.id,
+                },
+            })
+
+            await this.jobRepository.save(payload.jobId)
             return {
                 EC: 0, //error code
                 EM: 'Update job successfully', //error message
@@ -111,13 +141,22 @@ export class JobService {
 
     async remove(payload) {
         try {
-            await this.jobRepository.findOneByOrFail({
-                id: payload.jobId,
-                user: {
-                    id: payload.userId,
+            let userWithCompany = await this.userRepository.findOneOrFail({
+                where: { id: payload.user.userId },
+                relations: {
+                    company: true,
                 },
             })
-            await this.jobRepository.delete({ id: payload.id })
+            let userCompany = userWithCompany.company //get user company
+
+            //check if user company and company of job is the same
+            await this.jobRepository.findOneByOrFail({
+                id: payload.jobId,
+                company: {
+                    id: userCompany.id,
+                },
+            })
+            await this.jobRepository.delete({ id: payload.jobId })
             return {
                 EC: 0, //error code
                 EM: 'Delete job successfully', //error message

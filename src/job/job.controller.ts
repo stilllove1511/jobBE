@@ -23,8 +23,8 @@ export class JobController {
     @Post('create')
     async create(@Body() job: CreateJobDto, @Request() req) {
         try {
-            job = { ...job, user: { id: req.user.userId } }
-            return await this.jobService.create(job)
+            let payload = { job, user: { userId: req.user.userId } }
+            return await this.jobService.create(payload)
         } catch (error) {
             console.log(error)
             return {
@@ -34,18 +34,18 @@ export class JobController {
         }
     }
 
-    @Get()
-    async findAll(@Request() req) {
-        try {
-            return await this.jobService.findAll(req.user.userId)
-        } catch (error) {
-            console.log(error)
-            return {
-                EC: 1, //error code
-                EM: 'Error from server', //error message
-            }
-        }
-    }
+    // @Get()
+    // async findAll(@Request() req) {
+    //     try {
+    //         return await this.jobService.findAll(req.user.userId)
+    //     } catch (error) {
+    //         console.log(error)
+    //         return {
+    //             EC: 1, //error code
+    //             EM: 'Error from server', //error message
+    //         }
+    //     }
+    // }
 
     @Get(':id')
     async findOne(@Param('id') id: string) {
@@ -66,7 +66,9 @@ export class JobController {
             job.id = +id
             return await this.jobService.update({
                 job,
-                userId: req.user.userId,
+                user: {
+                    userId: req.user.userId,
+                },
                 jobId: +id,
             })
         } catch (error) {
@@ -83,7 +85,9 @@ export class JobController {
         try {
             return await this.jobService.remove({
                 jobId: +id,
-                userId: req.user.userId,
+                user: {
+                    userId: req.user.userId,
+                },
             })
         } catch (error) {
             console.log(error)
