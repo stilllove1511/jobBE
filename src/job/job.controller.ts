@@ -13,7 +13,7 @@ import { CreateJobDto } from './dto/create-job.dto'
 import { UpdateJobDto } from './dto/update-job.dto'
 import { UseGuards } from '@nestjs/common/decorators'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
-import { User } from 'src/users/user.entity'
+import { User } from 'src/user/user.entity'
 
 @UseGuards(JwtAuthGuard)
 @Controller('job')

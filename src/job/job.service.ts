@@ -35,15 +35,15 @@ export class JobService {
                         id: userId,
                     },
                 },
-                relations: {
-                    user: true,
-                },
-                select: {
-                    user: {
-                        id: true,
-                        username: true,
-                    },
-                },
+                // relations: {
+                //     user: true,
+                // },
+                // select: {
+                //     user: {
+                //         id: true,
+                //         username: true,
+                //     },
+                // },
             })
             return {
                 EC: 0, //error code
@@ -63,15 +63,15 @@ export class JobService {
         try {
             let job = await this.jobRepository.findOneOrFail({
                 where: { id },
-                relations: {
-                    user: true,
-                },
-                select: {
-                    user: {
-                        id: true,
-                        username: true,
-                    },
-                },
+                // relations: {
+                //     user: true,
+                // },
+                // select: {
+                //     user: {
+                //         id: true,
+                //         username: true,
+                //     },
+                // },
             })
             return {
                 EC: 0, //error code
