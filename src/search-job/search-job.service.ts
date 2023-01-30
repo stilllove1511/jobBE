@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { Job } from '../job/job.entity'
 
 @Injectable()
@@ -9,9 +9,18 @@ export class SearchJobService {
         private jobRepository: Repository<Job>,
     ) {}
 
-    async search(title) {
+    async search(query) {
         try {
-            let jobs = await this.jobRepository.findBy({ title })
+            let jobs = await this.jobRepository.find({
+                where: {
+                    title: query.title ? Like(`%${query.title}%`) : null,
+                    skills: query.skills ? Like(`%${query.skills}%`) : null,
+                    address: query.address ? Like(`%${query.address}%`) : null,
+                },
+                relations: {
+                    company: true,
+                },
+            })
             return {
                 EC: 0, //error code
                 EM: 'here is our result', //error message

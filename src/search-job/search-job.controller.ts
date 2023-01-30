@@ -1,14 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, Param, Query } from '@nestjs/common'
 import { SearchJobService } from './search-job.service'
 
 @Controller('search-job')
 export class SearchJobController {
     constructor(private readonly searchJobService: SearchJobService) {}
 
-    @Get(':title')
-    async search(@Param() param) {
+    @Get()
+    async search(@Query() query) {
         try {
-            return await this.searchJobService.search(param.title)
+            return await this.searchJobService.search(query)
         } catch (error) {
             console.log(error)
             return {
