@@ -1,6 +1,4 @@
 import { Injectable, Inject } from '@nestjs/common'
-import { CreateJobDto } from './dto/create-job.dto'
-import { UpdateJobDto } from './dto/update-job.dto'
 import { Job } from './job.entity'
 import { Repository } from 'typeorm'
 import {
@@ -32,6 +30,7 @@ export class JobService {
 
             await this.jobRepository.insert({
                 ...payload.job,
+                skills: JSON.stringify(payload.job.skills),
                 company: userCompany,
             })
             return {
@@ -96,7 +95,7 @@ export class JobService {
             return {
                 EC: 0, //error code
                 EM: 'Get job successfully', //error message
-                DT: job, //data
+                DT: { ...job, skills: JSON.parse(job.skills) }, //data
             }
         } catch (error) {
             console.log(error)
