@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { Job } from 'src/job/job.entity'
+import { User } from 'src/user/user.entity'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm'
 
 @Entity('application')
 export class Application {
@@ -6,14 +8,14 @@ export class Application {
     id: number
 
     @Column()
-    user_id: number
-
-    @Column()
-    job_id: number
-
-    @Column()
-    advantages: string
+    intro: string
 
     @Column()
     CV_URL: string
+
+    @ManyToOne(() => Job, (job) => job.applications)
+    job: Job
+
+    @ManyToOne(() => User, (user) => user.applications)
+    user: User
 }

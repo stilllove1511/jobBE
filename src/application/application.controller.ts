@@ -6,19 +6,24 @@ import {
     Patch,
     Param,
     Delete,
+    Request,
 } from '@nestjs/common'
+import { UseGuards } from '@nestjs/common/decorators'
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { ApplicationService } from './application.service'
-import { CreateApplicationDto } from './dto/create-application.dto'
 import { UpdateApplicationDto } from './dto/update-application.dto'
 
+@UseGuards(JwtAuthGuard)
 @Controller('application')
 export class ApplicationController {
     constructor(private readonly applicationService: ApplicationService) {}
 
     @Post('create')
-    async create(@Body() createApplicationDto: CreateApplicationDto) {
+    async create(@Body() payload, @Request() req) {
         try {
-            return await this.applicationService.create(createApplicationDto)
+            console.log(payload)
+            payload = { ...payload, user: { id: req.user.userId } }
+            return await this.applicationService.create(payload)
         } catch (error) {
             console.log(error)
             return {
@@ -36,18 +41,5 @@ export class ApplicationController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.applicationService.findOne(+id)
-    }
-
-    @Patch(':id')
-    update(
-        @Param('id') id: string,
-        @Body() updateApplicationDto: UpdateApplicationDto,
-    ) {
-        return this.applicationService.update(+id, updateApplicationDto)
-    }
-
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.applicationService.remove(+id)
     }
 }

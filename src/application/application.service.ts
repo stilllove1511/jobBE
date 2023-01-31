@@ -3,11 +3,12 @@ import { CreateApplicationDto } from './dto/create-application.dto'
 import { UpdateApplicationDto } from './dto/update-application.dto'
 import { Repository } from 'typeorm'
 import { Application } from './application.entity'
+import { APPLICATION_RESPONSITORY } from 'src/common/constant/database-provider.constant'
 
 @Injectable()
 export class ApplicationService {
     constructor(
-        @Inject('APPLICATION_RESPONSITORY')
+        @Inject(APPLICATION_RESPONSITORY)
         private applicationRepository: Repository<Application>,
     ) {}
 

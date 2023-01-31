@@ -1,5 +1,5 @@
+import { Application } from 'src/application/application.entity'
 import { Company } from 'src/company/company.entity'
-import { Job } from 'src/job/job.entity'
 import {
     Entity,
     Column,
@@ -36,4 +36,7 @@ export class User {
 
     @ManyToOne(() => Company, (company) => company.users)
     company: Company
+
+    @OneToMany(() => Application, (application) => application.user)
+    applications: Application[]
 }
