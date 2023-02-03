@@ -6,6 +6,9 @@ import {
     PrimaryGeneratedColumn,
     ManyToOne,
     OneToMany,
+    BeforeInsert,
+    AfterLoad,
+    VirtualColumn,
 } from 'typeorm'
 
 @Entity('job')
@@ -31,8 +34,8 @@ export class Job {
     @Column({ nullable: true })
     description: string
 
-    @Column()
-    skills: string
+    @Column('simple-array', { nullable: true })
+    skills: string[]
 
     @ManyToOne(() => Company, (company) => company.jobs)
     company: Company

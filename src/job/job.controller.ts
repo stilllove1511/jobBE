@@ -13,11 +13,11 @@ import { CreateJobDto } from './dto/create-job.dto'
 import { UseGuards } from '@nestjs/common/decorators'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 
-@UseGuards(JwtAuthGuard)
 @Controller('job')
 export class JobController {
     constructor(private readonly jobService: JobService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Post('create')
     async create(@Body() job: CreateJobDto, @Request() req) {
         try {
@@ -58,12 +58,13 @@ export class JobController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch('update/:id')
     async update(@Param('id') id: string, @Body() job: any, @Request() req) {
         try {
             job.id = +id
             return await this.jobService.update({
-                job,
+                ...job,
                 user: {
                     userId: req.user.userId,
                 },
@@ -78,6 +79,7 @@ export class JobController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete('delete/:id')
     async remove(@Param('id') id: string, @Request() req) {
         try {

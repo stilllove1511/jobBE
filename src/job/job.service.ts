@@ -30,7 +30,7 @@ export class JobService {
 
             await this.jobRepository.insert({
                 ...payload.job,
-                skills: JSON.stringify(payload.job.skills),
+                // skills: JSON.stringify(payload.job.skills),
                 company: userCompany,
             })
             return {
@@ -82,9 +82,9 @@ export class JobService {
         try {
             let job = await this.jobRepository.findOneOrFail({
                 where: { id },
-                // relations: {
-                //     user: true,
-                // },
+                relations: {
+                    company: true,
+                },
                 // select: {
                 //     user: {
                 //         id: true,
@@ -95,7 +95,8 @@ export class JobService {
             return {
                 EC: 0, //error code
                 EM: 'Get job successfully', //error message
-                DT: { ...job, skills: JSON.parse(job.skills) }, //data
+                // DT: { ...job, skills: JSON.parse(job.skills) }, //data
+                DT: job, //data
             }
         } catch (error) {
             console.log(error)
@@ -124,7 +125,8 @@ export class JobService {
                 },
             })
 
-            await this.jobRepository.save(payload.jobId)
+            // payload.user.id = payload.user.userId
+            await this.jobRepository.save(payload)
             return {
                 EC: 0, //error code
                 EM: 'Update job successfully', //error message

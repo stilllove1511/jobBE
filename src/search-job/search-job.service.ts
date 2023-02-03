@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { Like, Repository } from 'typeorm'
+import { ArrayContains } from 'typeorm/find-options/operator/ArrayContains'
 import { Job } from '../job/job.entity'
 
 @Injectable()
