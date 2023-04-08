@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
 import { AccountModule } from './account/account.module'
 import { CompanyModule } from './company/company.module'
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
     imports: [
@@ -18,8 +19,11 @@ import { CompanyModule } from './company/company.module'
         UserModule,
         AccountModule,
         CompanyModule,
+        ConfigModule.forRoot({
+            isGlobal: true
+        })
     ],
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
